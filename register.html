@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Registration Form</title>
+    <style>
+        .error {
+            color: red;
+            font-size: 14px;
+        }
+        .success {
+            color: green;
+        }
+        input {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Registration Form</h2>
+    <form id="registerForm">
+        <label>Name</label>
+        <input type="text" id="name">
+        <p id="nameError" class="error"></p>
+        <label>Email</label>`
+        <input type="text" id="email">
+        <p id="emailError" class="error"></p>
+        <label>Phone</label>
+        <input type="text" id="phone">
+        <p id="phoneError" class="error"></p>
+        <label>Password</label>
+        <input type="password" id="password">
+        <p id="passwordError" class="error"></p>
+        <button type="submit">Register</button>
+    </form>
+    <p id="successMessage" class="success"></p>
+    <script>
+        let form = document.getElementById("registerForm");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let name = document.getElementById("name").value.trim();
+            let email = document.getElementById("email").value.trim();
+            let phone = document.getElementById("phone").value.trim();
+            let password = document.getElementById("password").value;
+
+            let nameError = document.getElementById("nameError");
+            let emailError = document.getElementById("emailError");
+            let phoneError = document.getElementById("phoneError");
+            let passwordError = document.getElementById("passwordError");
+            let successMessage = document.getElementById("successMessage");
+
+            // Clear previous errors
+            nameError.textContent = "";
+            emailError.textContent = "";
+            phoneError.textContent = "";
+            passwordError.textContent = "";
+            successMessage.textContent = "";
+
+            // Regex
+            let namePattern = /^[A-Za-z ]{3,}$/;
+            let emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let phonePattern = /^[6-9]\d{9}$/;
+            let passwordPattern = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/;
+
+            let isValid = true;
+
+            // Name
+            if (name === "") {
+                nameError.textContent = "Name is required";
+                isValid = false;
+            }
+            else if (!namePattern.test(name)) {
+                nameError.textContent = "Enter a valid name";
+                isValid = false;
+            }
+
+            // Email
+            if (email === "") {
+                emailError.textContent = "Email is required";
+                isValid = false;
+            }
+            else if (!emailPattern.test(email)) {
+                emailError.textContent = "Enter a valid email";
+                isValid = false;
+            }
+
+            // Phone
+            if (phone === "") {
+                phoneError.textContent = "Phone number is required";
+                isValid = false;
+            }
+            else if (!phonePattern.test(phone)) {
+                phoneError.textContent = "Enter a valid 10 digit phone number";
+                isValid = false;
+            }
+
+            // Password
+            if (password === "") {
+                passwordError.textContent = "Password is required";
+                isValid = false;
+            }
+            else if (!passwordPattern.test(password)) {
+                passwordError.textContent =
+                    "Password must contain 8 characters, uppercase, lowercase and number";
+                isValid = false;
+            }
+
+            // Registration successful
+            if (isValid) {
+                // Store registration details
+                let user = {
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    password: password
+                };
+
+                localStorage.setItem("user", JSON.stringify(user));
+                successMessage.textContent =
+                    "Registration successful! Redirecting to login...";
+                form.reset();
+
+                // Navigate to login page
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1000);
+            }
+        });
+    </script>
+</body>
+</html>

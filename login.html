@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login</title>
+    <style>
+        .error {
+            color: red;
+        }
+        .success {
+            color: green;
+        }
+        input {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Login</h2>
+    <form id="loginForm">
+        <label>Email</label>
+        <input type="text" id="email">
+        <p id="emailError" class="error"></p>
+        <label>Password</label>
+        <input type="password" id="password">
+        <p id="passwordError" class="error"></p>
+        <button type="submit">Login</button>
+    </form>
+    <p id="successMessage" class="success"></p>
+    <script>
+        let form = document.getElementById("loginForm");
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+            let email = document.getElementById("email").value.trim();
+            let password = document.getElementById("password").value;
+
+            let emailError = document.getElementById("emailError");
+            let passwordError = document.getElementById("passwordError");
+
+            let successMessage = document.getElementById("successMessage");
+            // Clear previous messages
+            emailError.textContent = "";
+            passwordError.textContent = "";
+            successMessage.textContent = "";
+
+            let isValid = true;
+            // Email validation
+            if (email === "") {
+                emailError.textContent = "Email is required";
+                isValid = false;
+            }
+
+            // Password validation
+            if (password === "") {
+                passwordError.textContent = "Password is required";
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+            // Get registered user
+            let storedUser = localStorage.getItem("user");
+            if (storedUser === null) {
+                emailError.textContent =
+                    "No registered user found. Please register first.";
+                return;
+            }
+            // Convert JSON string to object
+            let user = JSON.parse(storedUser);
+            // Check email and password
+            if (email === user.email && password === user.password) {
+                successMessage.textContent = "Login successful!";
+                // Store login status
+                localStorage.setItem("isLoggedIn", "true");
+                // Navigate to home
+                setTimeout(() => {
+                    window.location.href = "home.html";
+                }, 1000);
+            }
+            else {
+                passwordError.textContent =
+                    "Invalid email or password";
+            }
+        });
+        // localStorage.clear()
+    </script>
+</body>
+</html>
